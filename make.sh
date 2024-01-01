@@ -87,7 +87,7 @@ DEVICE="X00TD"
 DEFCONFIG=X00TD_defconfig
 
 # Specify compiler.
-# 'sdclang' or 'gcc'
+# 'sdclang' or 'gcc' or 'yukiclang'
 COMPILER=sdclang
 
 # Build modules. 0 = NO | 1 = YES
@@ -226,6 +226,25 @@ DATE=$(TZ=Asia/Jakarta date +"%Y%m%d")
 		GCC32_DIR=$KERNEL_DIR/gcc32
   	fi
 
+if [ $COMPILER = "yukiclang" ]
+	then
+		msger -n "|| Cloning YukiClang ||"
+		git clone --depth=1 https://gitlab.com/klozz/yuki-clang-new -b 17.0.0 yukiclang
+
+  		msger -n "|| Cloning Yukiclang ||"
+		git clone --depth=1 https://github.com/Kneba/aarch64-linux-android-4.9 gcc64
+		git clone --depth=1 https://github.com/Kneba/arm-linux-androideabi-4.9 gcc32
+
+		# Toolchain Directory defaults to sdclang
+		TC_DIR=$KERNEL_DIR/sdclang
+  
+		# Toolchain Directory defaults to gcc
+		GCC64_DIR=$KERNEL_DIR/gcc64
+		GCC32_DIR=$KERNEL_DIR/gcc32
+
+  # Toolchain Directory defaults to gcc
+		TC_DIR=$KERNEL_DIR/yukiclang
+  	fi
 	msger -n "|| Cloning Anykernel ||"
 	git clone https://github.com/Tiktodz/AnyKernel3.git -b hmp AnyKernel3
 
@@ -253,6 +272,12 @@ exports()
 	then
 		KBUILD_COMPILER_STRING=$("$GCC64_DIR"/bin/aarch64-linux-android-gcc --version | head -n 1)
 		PATH=$GCC64_DIR/bin/:$GCC32_DIR/bin/:/usr/bin:$PATH
+ elif [ $COMPILER = "yukiclang" ]
+	then
+		CLANG_VER="Yuki clang version 17.0.0"
+		KBUILD_COMPILER_STRING="YUKI CLANG"
+		PATH=export PATH="yukiclang/bin:$PATH"
+		ClangMoreStrings="AR=llvm-ar NM=llvm-nm AS=llvm-as STRIP=llvm-strip OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf HOSTAR=llvm-ar HOSTAS=llvm-as LD_LIBRARY_PATH=$TC_DIR/lib LD=ld.lld HOSTLD=ld.lld"
 	fi
 
 	BOT_MSG_URL="https://api.telegram.org/bot$TG_TOKEN/sendMessage"
@@ -336,6 +361,20 @@ build_kernel()
 			NM=aarch64-linux-android-nm \
 			OBJCOPY=aarch64-linux-android-objcopy \
 			LD=aarch64-linux-android-$LINKER
+		)
+
+elif [ $COMPILER = "yukiclang" ]
+	then
+		MAKE+=(
+			   
+      ARCH=arm64 \
+      LD=ld.lld \
+      NM=llvm-nm \
+      AR=llvm-ar \
+      CC="clang" \
+      CLANG_TRIPLE=aarch64-linux-gnu- \
+      CROSS_COMPILE=aarch64-linux-gnu- \
+      CROSS_COMPILE_ARM32=arm-linux-gnueabi-
 		)
 	fi
 
