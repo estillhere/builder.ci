@@ -1,0 +1,17 @@
+version: 2.1
+jobs:
+  compile:
+   docker:
+      - image: eprjkt/build:kernel
+   steps:
+      - run:
+          command: |
+            git clone --recursive https://github.com/estillhere/android_kernel_asus_sdm636 -b clown kernel && cd kernel
+            curl https://raw.githubusercontent.com/estillhere/builder.ci/make.sh > run.sh
+            source run.sh
+          no_output_timeout : 5h
+workflows:
+  version: 2.1
+  cooking:
+    jobs:
+      - compile
