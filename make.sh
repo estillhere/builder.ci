@@ -49,6 +49,7 @@ cdir()
 KERNEL_DIR="$(pwd)"
 BASEDIR="$(basename "$KERNEL_DIR")"
 
+#Additional Source
 KERNEL=""
 CODEKERNEL=""
 VAR=""
@@ -226,15 +227,6 @@ DATE=$(TZ=Asia/Jakarta date +"%Y%m%d")
 		GCC32_DIR=$KERNEL_DIR/gcc32
   	fi
 
-if [ $COMPILER = "yukiclang" ]
-	then
-		msger -n "|| Cloning YukiClang ||"
-		git clone --depth=1 https://gitlab.com/klozz/yuki-clang-new -b 17.0.0 yukiclang
-
-  		msger -n "|| Cloning Yukiclang ||"
-		git clone --depth=1 https://github.com/Kneba/aarch64-linux-android-4.9 gcc64
-		git clone --depth=1 https://github.com/Kneba/arm-linux-androideabi-4.9 gcc32
-
 		# Toolchain Directory defaults to sdclang
 		TC_DIR=$KERNEL_DIR/sdclang
   
@@ -246,7 +238,7 @@ if [ $COMPILER = "yukiclang" ]
 		TC_DIR=$KERNEL_DIR/yukiclang
   	fi
 	msger -n "|| Cloning Anykernel ||"
-	git clone https://github.com/Tiktodz/AnyKernel3.git -b hmp AnyKernel3
+	git clone https://github.com/estillhere/AnyKernel3.git -b hmp AnyKernel3
 
 	if [ $BUILD_DTBO = 1 ]
 	then
@@ -272,12 +264,6 @@ exports()
 	then
 		KBUILD_COMPILER_STRING=$("$GCC64_DIR"/bin/aarch64-linux-android-gcc --version | head -n 1)
 		PATH=$GCC64_DIR/bin/:$GCC32_DIR/bin/:/usr/bin:$PATH
- elif [ $COMPILER = "yukiclang" ]
-	then
-		CLANG_VER="Yuki clang version 17.0.0"
-		KBUILD_COMPILER_STRING="YUKI CLANG"
-		PATH=export PATH="yukiclang/bin:$PATH"
-		ClangMoreStrings="AR=llvm-ar NM=llvm-nm AS=llvm-as STRIP=llvm-strip OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf HOSTAR=llvm-ar HOSTAS=llvm-as LD_LIBRARY_PATH=$TC_DIR/lib LD=ld.lld HOSTLD=ld.lld"
 	fi
 
 	BOT_MSG_URL="https://api.telegram.org/bot$TG_TOKEN/sendMessage"
@@ -363,19 +349,6 @@ build_kernel()
 			LD=aarch64-linux-android-$LINKER
 		)
 
-elif [ $COMPILER = "yukiclang" ]
-	then
-		MAKE+=(
-			   
-      ARCH=arm64 \
-      LD=ld.lld \
-      NM=llvm-nm \
-      AR=llvm-ar \
-      CC="clang" \
-      CLANG_TRIPLE=aarch64-linux-gnu- \
-      CROSS_COMPILE=aarch64-linux-gnu- \
-      CROSS_COMPILE_ARM32=arm-linux-gnueabi-
-		)
 	fi
 
 	if [ $SILENCE = "1" ]
@@ -433,16 +406,16 @@ gen_zip()
 	mv "$KERNEL_DIR"/out/arch/arm64/boot/dtbo.img AnyKernel3/dtbo.img
 	fi
 	cdir AnyKernel3
-	cp -af $KERNEL_DIR/init.$CODENAME.Spectrum.rc spectrum/init.spectrum.rc && sed -i "s/persist.spectrum.kernel.*/persist.spectrum.kernel TheOneMemory/g" spectrum/init.spectrum.rc
+	cp -af $KERNEL_DIR/init.$CODENAME.Spectrum.rc spectrum/init.spectrum.rc && sed -i "s/persist.spectrum.kernel.*/persist.spectrum.kernel Lospecados/g" spectrum/init.spectrum.rc
 	cp -af $KERNEL_DIR/changelog META-INF/com/google/android/aroma/changelog.txt
 	cp -af anykernel-real.sh anykernel.sh
 	sed -i "s/kernel.string=.*/kernel.string=$KERNELNAME/g" anykernel.sh
 	sed -i "s/kernel.type=.*/kernel.type=$VARIANT/g" anykernel.sh
 	sed -i "s/kernel.for=.*/kernel.for=$CODENAME/g" anykernel.sh
 	sed -i "s/kernel.compiler=.*/kernel.compiler=$KBUILD_COMPILER_STRING/g" anykernel.sh
-	sed -i "s/kernel.made=.*/kernel.made=dotkit @fakedotkit/g" anykernel.sh
+	sed -i "s/kernel.made=.*/kernel.made=estillhere @steyhist/g" anykernel.sh
 	sed -i "s/kernel.version=.*/kernel.version=$KERVER/g" anykernel.sh
-	sed -i "s/message.word=.*/message.word=Appreciate your efforts for choosing TheOneMemory kernel./g" anykernel.sh
+	sed -i "s/message.word=.*/message.word=Thankyour for choosing LOSPECADOS! kernel./g" anykernel.sh
 	sed -i "s/build.date=.*/build.date=$DATE/g" anykernel.sh
 	sed -i "s/build.type=.*/build.type=$BASE/g" anykernel.sh
 	sed -i "s/supported.versions=.*/supported.versions=9-13/g" anykernel.sh
@@ -455,8 +428,8 @@ gen_zip()
 	cd META-INF/com/google/android
 	sed -i "s/KNAME/$KERNELNAME/g" aroma-config
 	sed -i "s/KVER/$KERVER/g" aroma-config
-	sed -i "s/KAUTHOR/dotkit @fakedotkit/g" aroma-config
-	sed -i "s/KDEVICE/Zenfone Max Pro M1/g" aroma-config
+	sed -i "s/KAUTHOR/estillhere.Stey @steyhist/g" aroma-config
+	sed -i "s/KDEVICE/Asus Zenfone Max Pro M1/g" aroma-config
 	sed -i "s/KBDATE/$DATE/g" aroma-config
 	sed -i "s/KVARIANT/$VARIANT/g" aroma-config
 	cd ../../../..
