@@ -50,10 +50,10 @@ KERNEL_DIR="$(pwd)"
 BASEDIR="$(basename "$KERNEL_DIR")"
 
 #Additional Source
-KERNEL=""
-CODEKERNEL=""
-VAR=""
-BASECODE=""
+KERNEL="Lospecados"
+CODEKERNEL="clown"
+VAR="HMP"
+BASECODE="CLO"
 
 # Kernel name
 KERNELNAME="$KERNEL"
@@ -88,7 +88,7 @@ DEVICE="X00TD"
 DEFCONFIG=X00TD_defconfig
 
 # Specify compiler.
-# 'sdclang' or 'gcc' or 'yukiclang'
+# 'sdclang' or 'gcc'
 COMPILER=sdclang
 
 # Build modules. 0 = NO | 1 = YES
