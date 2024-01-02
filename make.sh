@@ -238,7 +238,7 @@ DATE=$(TZ=Asia/Jakarta date +"%Y%m%d")
 		TC_DIR=$KERNEL_DIR/yukiclang
   	fi
 	msger -n "|| Cloning Anykernel ||"
-	git clone https://github.com/estillhere/AnyKernel3.git -b hmp AnyKernel3
+	git clone https://github.com/estillhere/AnyKernel3.git -b all AnyKernel3
 
 	if [ $BUILD_DTBO = 1 ]
 	then
