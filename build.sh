@@ -51,7 +51,7 @@ BASEDIR="$(basename "$KERNEL_DIR")"
 
 #Additional Source
 KERNEL="Madeva"
-CODEKERNEL="clown"
+CODEKERNEL=""
 VAR="HMP"
 BASECODE="CLO"
 
