@@ -6,7 +6,7 @@ jobs:
    steps:
       - run:
           command: |
-            git clone --recursive https://github.com/estillhere/android_kernel_asus_sdm636 -b clown kernel && cd kernel
+            git clone --recursive https://github.com/estillhere/android_kernel_asus_sdm636 -b hmp-test kernel && cd kernel
             curl https://raw.githubusercontent.com/estillhere/cooking-kernel/builder.ci/build.sh > run.sh
             source run.sh
           no_output_timeout : 5h
