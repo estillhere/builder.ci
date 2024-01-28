@@ -50,7 +50,7 @@ KERNEL_DIR="$(pwd)"
 BASEDIR="$(basename "$KERNEL_DIR")"
 
 #Additional Source
-KERNEL="Lospecados"
+KERNEL="Madeva"
 CODEKERNEL="clown"
 VAR="HMP"
 BASECODE="CLO"
@@ -72,7 +72,7 @@ ZIPNAME="$KERNELNAME-$CODENAME-$VARIANT-$BASE"
 
 # Build Author
 # Take your username, it should be a universal and most probably, case-sensitive
-AUTHOR=""
+AUTHOR="Grace"
 
 # Architecture
 ARCH=arm64
